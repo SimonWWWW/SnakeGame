@@ -7,7 +7,7 @@
 * [Sources](#Sources)
 ## General info
 Classic Snake game created to learn how to write apps with Windows Forms.
-## Features.
+## Features
 Turn on and play classic game!
 ## Screenshots
 ![screenshot](./Screenshots/Screenshot_snake_game.png)
