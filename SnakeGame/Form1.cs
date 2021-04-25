@@ -23,20 +23,57 @@ namespace SnakeGame
             gameTimer.Start(); //starting the timer
             startGame();
         }
-
-        private void keyisdown(object sender, KeyEventArgs e)
+        private void timer1_Tick(object sender, EventArgs e)
         {
 
+        }
+        private void keyisdown(object sender, KeyEventArgs e)
+        {
+            Input.changeState(e.KeyCode, true); //key down trigger the change state from the Input class
         }
 
         private void keyisup(object sender, KeyEventArgs e)
         {
-
+            Input.changeState(e.KeyCode, false); //key up trigger the change state from the Input class
         }
 
         private void updateGraphics(object sender, PaintEventArgs e)
         {
-
+            //this is where we will see the snake and its parts moving
+            Graphics canvas = e.Graphics;//create a new graphics class called canvas
+            if(Settings.GameOver == false)
+            {
+                //if the game is not over then we do the following
+                Brush snakeColour; // create a new brush called snake colour
+                //run a loop to check the snake parts
+                for(int i = 0; i < Snake.Count; i++)
+                {
+                    if(i == 0)
+                    {
+                        //colour the head of the snake = black
+                        snakeColour = Brushes.Black;
+                    }
+                    else
+                    {
+                        //the colour of the rest body = green
+                        snakeColour = Brushes.Green;
+                    }
+                    //draw snake body and head
+                    canvas.FillEllipse(snakeColour, new Rectangle(Snake[i].X * Settings.Width,
+                        Snake[i].Y * Settings.Height, Settings.Width, Settings.Height));
+                    //draw food
+                    canvas.FillEllipse(Brushes.Red, new Rectangle(food.X * Settings.Width,
+                        food.Y * Settings.Height, Settings.Width, Settings.Height));
+                    }
+                }
+            else
+            {
+                // this part will run when the game is over
+                //it will show the game over text and make the label 3 visible on the screen
+                string gameOver = "Game Over\n" + "Final Score is " + Settings.Score + "\n Press enter to Restart";
+                label3.Text = gameOver;
+                label3.Visible = true;
+            }
         }
         private void updateScreen(object sender, EventArgs e)
         {
@@ -76,7 +113,16 @@ namespace SnakeGame
         }
         private void startGame()
         {
+            //start game function
+            label3.Visible = false;// label 3 invisible
+            new Settings(); //new instance of settings
+            Snake.Clear();
+            Circle head = new Circle { X = 10, Y = 5 };// new head for the snake
+            Snake.Add(head); // add the head to snake array
 
+            label2.Text = Settings.Score.ToString(); // show the score to the label 2
+
+            generateFood();// run the generate food function
         }
         private void movePlayer()
         {
@@ -132,15 +178,30 @@ namespace SnakeGame
         }
         private void generateFood()
         {
-
+            int maxXpos = pbCanvas.Size.Width / Settings.Width;
+            // create a maximum X posistion int with half the size of the play area
+            int maxYpos = pbCanvas.Size.Height / Settings.Height;
+            // create a maximum Y posistion int with half the size of the play area
+            Random rnd = new Random(); // new random class
+            food = new Circle { X = rnd.Next(0, maxXpos), Y = rnd.Next(0, maxYpos) }; //food with random positions
         }
         private void eat()
         {
-
+            //add a part to body
+            Circle body = new Circle
+            {
+                X = Snake[Snake.Count - 1].X,
+                Y = Snake[Snake.Count - 1].Y
+            };
+            Snake.Add(body);//add the part to the snakes array
+            Settings.Score += Settings.Points;//increase the score for the game
+            label2.Text = Settings.Score.ToString();//show the score on the label 2
+            generateFood();
         }
         private void die()
         {
-
+            //change the game over Boolean to true
+            Settings.GameOver = true;
         }
     }
 }
