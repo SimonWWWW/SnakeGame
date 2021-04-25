@@ -1,5 +1,4 @@
 # SnakeGame
-# TaskManager - web app
 ## Table of contents
 * [General info](#General-info)
 * [Features](#features)
